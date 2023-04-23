@@ -1,36 +1,51 @@
-import cv2
+import cv2 as cv
+import numpy as np
 
-cap=cv2.VideoCapture(0)
+cap=cv.VideoCapture(0)
 ct=0
-bg=cv2.createBackgroundSubtractorMOG2()
+bg=cv.createBackgroundSubtractorMOG2()
 stat=None
 
-while(True):
-    frame=cv2.flip(cap.read()[1],1)
-    try:
-        fgmask=bg.apply(cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY))
-        #thresh=cv2.threshold(cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY),150,255,cv2.THRESH_BINARY)[1]
-        contours=cv2.findContours(image=fgmask,mode=cv2.RETR_TREE,method=cv2.CHAIN_APPROX_NONE)[0]
-        if contours:
-            ar=[]
-            for contour in contours:
-                ar.append(cv2.contourArea(contour))
-            M=cv2.moments(contours[ar.index(max(ar,default=0))])
-            x,y,w,h=cv2.boundingRect(contours[ar.index(max(ar,default=0))])
-            cv2.drawContours(fgmask,[contours[ar.index(max(ar,default=0))]],0,(255,255,255),3,maxLevel=0)
-            if h<w:
-                ct+=1
-            if ct>200:
-                stat='FALLEN'
-                cv2.putText(frame,stat,(x,y),cv2.FONT_HERSHEY_PLAIN,0.5,(255,255,255),2)
-                cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),2)
-            if h>w:
-                stat=''
-                cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
-        cv2.imshow('bruh',frame)    
-        if cv2.waitKey(1) & 0xFF==ord('q'):
-            break
-    except Exception as e:
+while True:
+    frame=cv.flip(cap.read()[1],1)
+    fgmask=bg.apply(cv.cvtColor(frame,cv.COLOR_BGR2GRAY))
+    contours=cv.findContours(image=fgmask,mode=cv.RETR_TREE,method=cv.CHAIN_APPROX_NONE)[0]
+
+    thresh=cv.threshold(cv.cvtColor(frame,cv.COLOR_BGR2GRAY),127,255,cv.THRESH_BINARY)[1]
+    kernel=cv.getStructuringElement(cv.MORPH_CROSS,(3,3))
+    op=cv.morphologyEx(thresh,cv.MORPH_OPEN,kernel)
+    cl=cv.morphologyEx(op,cv.MORPH_CLOSE,kernel)
+    sk=np.zeros(cl.shape,np.uint8)
+    el=cv.getStructuringElement(cv.MORPH_CROSS,(3,3))
+    stat=True
+    while stat:
+        eroded=cv.erode(cl,el)
+        temp=cv.dilate(eroded,el)
+        temp=cv.subtract(cl,temp)
+        sk=cv.bitwise_or(sk,temp)
+        if cv.countNonZero(cl:=eroded.copy())==0:
+            stat=False
+    cv.imshow('skel',sk)
+    if contours:
+        ar=[]
+        for contour in contours:
+            ar.append(cv.contourArea(contour))
+        M=cv.moments(contours[ar.index(max(ar,default=0))])
+        x,y,w,h=cv.boundingRect(contours[ar.index(max(ar,default=0))])
+        cv.drawContours(fgmask,[contours[ar.index(max(ar,default=0))]],0,(255,255,255),1,maxLevel=0)
+        a_ratio=w/h
+        color=(0,255,0)
+        if 0.9<=a_ratio<=1.1:
+            stat='STANDING'
+        elif a_ratio>1.1:
+            stat='LYING'
+            color=(0,0,255)
+        else:
+            stat='SITTING'
+    cv.rectangle(frame,(x,y),(x+w,y+h),color,2)
+    cv.putText(frame,stat,(x,y),cv.FONT_HERSHEY_COMPLEX,0.5,(255,255,255),2)
+    cv.imshow('bruh',frame)    
+    if cv.waitKey(1) & 0xFF==ord('q'):
         break
 cap.release()
-#cap.destroyAllWindows()
+cv.destroyAllWindows()
