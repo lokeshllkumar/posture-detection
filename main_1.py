@@ -1,10 +1,25 @@
+'''
+pip install opencv-python
+numpy is preinstalled 
+pip install matplotlib
+pip install -U scikit-learn
+'''
+
 import cv2 as cv
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
 
 cap=cv.VideoCapture(0)
 ct=0
 bg=cv.createBackgroundSubtractorMOG2()
 stat=None
+
+loss=[]
+
+t_label,p_label=[],[]
+
+num_c,ac_list=0,[]
 
 while True:
     frame=cv.flip(cap.read()[1],1)
@@ -37,15 +52,42 @@ while True:
         color=(0,255,0)
         if 0.9<=a_ratio<=1.1:
             stat='STANDING'
+            loss.append(0)
+            t_label.append('STANDING')
+            num_c+=1
         elif a_ratio>1.1:
             stat='LYING'
             color=(0,0,255)
+            loss.append(1)
+            t_label.append('LYING')
         else:
             stat='SITTING'
+            loss.append(2)
+            t_label.append('SITTING')
+            num_c+=1
+        p_label.append(stat)
     cv.rectangle(frame,(x,y),(x+w,y+h),color,2)
     cv.putText(frame,stat,(x,y),cv.FONT_HERSHEY_COMPLEX,0.5,(255,255,255),2)
     cv.imshow('bruh',frame)    
     if cv.waitKey(1) & 0xFF==ord('q'):
         break
+    ct+=1
+    ac_list.append(num_c/ct)
 cap.release()
 cv.destroyAllWindows()
+
+plt.plot(loss)
+plt.title('loss graph')
+plt.xlabel('frame')
+plt.ylabel('loss')
+plt.show()
+
+plt.plot(ac_list)
+plt.title('accuracy graph')
+plt.xlabel('frame')
+plt.ylabel('accuracy')
+plt.show()
+
+c_mat=confusion_matrix(t_label,p_label,labels=['STANDING','LYING','SITTING'])
+print("confusion matrix:")
+print(c_mat)
