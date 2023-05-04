@@ -16,9 +16,9 @@ mp_pose=mp.solutions.pose #module that includes pre-trained depp learning model 
 
 pose=mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) #function that creates an instance of a pose estimation model
 #uses ML techniques to to identify and track a person's shoulders, wrists, elbows, etc.;
-#min_detection_confidence sets threshold value for confidence in detection(high value meaning that only more confident detections are accepted);
-#min_tracking_confidence sets threshold value for confidence in tracking (high value meaning that only more confident landmarks are considered);
-#landmarks are keypoints recognised by an ml model corresponding to face, hand, etc.; represented by a set of coordinates (x,y)
+#min_detection_confidence sets threshold value for confidence in detection( high value implying that only more confident detections are accepted);
+#min_tracking_confidence sets threshold value for confidence in tracking (high value implying that only more confident landmarks are considered);
+#landmarks are keypoints recognised by an ML model corresponding to face, hand, etc.; represented by a set of coordinates (x,y)
 
 stat=str()
 
@@ -29,7 +29,7 @@ cap.set(cv.CAP_PROP_FRAME_WIDTH,1920)
 cap.set(cv.CAP_PROP_FRAME_HEIGHT,1080)
 
 while True:
-    frame=cv.flip(cap.read()[1],1) #each frame is read from teh video capture object and flipped horizontally to produce a mirrored image
+    frame=cv.flip(cap.read()[1],1) #each frame is read from the video capture object and flipped horizontally to produce a mirrored image
     try:
         res=pose.process(cv.cvtColor(frame,cv.COLOR_BGR2RGB)) #function that takes an RGB frame and detect and estimate human pose within that frame;
         #returns a dictionary containing detected landmarks and the corresponding confidence scores;
