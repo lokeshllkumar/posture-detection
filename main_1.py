@@ -63,27 +63,25 @@ while True:
                 stat='LYING DOWN'
             else: #else, the person is sitting down
                 stat='SITTING'
-                
-            #accuracy is calculated by comparing the coordinates of the landmarks of the hips, knees, and shoulders of reafch case i.e. standing up, sitting down and lying down
-            '''
-            try:
-                if stat=='LYING DOWN':
-                    if landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].y>landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].y and landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP].y>landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP].y:
-                        ac+=1
-                    elif landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].y<landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].y and landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP].y<landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP].y:
-                        ac+=1
-                elif stat=='SITTING':
-                    if landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE].y==landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP].y and landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_KNEE].y==landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP].y:
-                        ac+=1
-                elif stat=='STANDING':
-                    if landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE].x==landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP].x and landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_KNEE].x==landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP].x:
-                        ac+=1    
-                t_ac+=1
-                ac_list.append(ac/t_ac)
-            except:
-                continue
-            '''
             cv.putText(frame,stat,(x_min,y_min),cv.FONT_HERSHEY_COMPLEX,0.5,(0,0,0),2) #the posture of the person is siplayed alongside the rectangle drawn around the person
+            
+            #accuracy is calculated by comparing the coordinates of the landmarks of the hips, knees, and shoulders of reafch case i.e. standing up, sitting down and lying down
+            if stat=='LYING DOWN':
+                if int(landmarks.landmark[11].y*frame.shape[0])>int(landmarks.landmark[12].y*frame.shape[0]) and int(landmarks.landmark[23].y*frame.shape[0])>int(landmarks.landmark[24].y*frame.shape[0]):
+                    ac+=1
+                elif int(landmarks.landmark[11].y*frame.shape[0])<int(landmarks.landmark[12].y*frame.shape[0]) and int(landmarks.landmark[23].y*frame.shape[0])<int(landmarks.landmark[24].y*frame.shape[0]):
+                    ac+=1
+            elif stat=='SITTING':
+                if int(landmarks.landmark[23].y*frame.shape[0])-6<=int(landmarks.landmark[25].y*frame.shape[0])<=int(landmarks.landmark[23].y*frame.shape[0])+6 and int(landmarks.landmark[24].y*frame.shape[0])-6<=int(landmarks.landmark[26].y*frame.shape[0])<=int(landmarks.landmark[24].y*frame.shape[0])+6:
+                    ac+=1
+            elif stat=='STANDING':
+                if int(landmarks.landmark[23].x*frame.shape[1])-6<=int(landmarks.landmark[25].x*frame.shape[1])<=int(landmarks.landmark[23].x*frame.shape[1])+6 and int(landmarks.landmark[24].x*frame.shape[1])-6<=int(landmarks.landmark[26].x*frame.shape[1])<=int(landmarks.landmark[24].x*frame.shape[1])+6:
+                    ac+=1
+            else:
+                pass
+            print(ac) 
+            t_ac+=1
+            ac_list.append(ac/t_ac)
         mp_draw.draw_landmarks(frame,res.pose_landmarks,mp_pose.POSE_CONNECTIONS) #the landmarks are plotted and drawn on teh person in the frame ;
         #res.pose_landmarks returns the coordinates of the landmarks detected; mp_pose.POSE_CONNECTIONS is a predefined list of landmark connections for the medipose Pose model
         cv.imshow('final',frame) #the frame is displayed to the user
@@ -94,10 +92,8 @@ while True:
 cap.release()
 cv.destroyAllWindows()
 
-'''
 plt.plot(ac_list)
 plt.title('ACCURACY GRAPH')
 plt.xlabel('FRAME')
 plt.ylabel('ACCURACY')
 plt.show()
-'''
