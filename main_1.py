@@ -21,6 +21,8 @@ pose=mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) #fun
 #landmarks are keypoints recognised by an ML model corresponding to face, hand, etc.; represented by a set of coordinates (x,y)
 
 stat=str()
+ac=t_ac=0
+ac_list=[] #to plot the accruacy graph
 
 cap=cv.VideoCapture(0) #creates a video capture object 
 
@@ -61,6 +63,23 @@ while True:
                 stat='LYING DOWN'
             else: #else, the person is sitting down
                 stat='SITTING'
+                
+            '''
+            #accuracy is calculated by comparing the coordinates of the landmarks of the hips, knees, and shoulders of reafch case i.e. standing up, sitting down and lying down
+            if stat=='LYING DOWN':
+                if landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].y>landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].y and landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP].y>landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP].y:
+                    ac+=1
+                elif landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].y<landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].y and landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP].y<landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP].y:
+                    ac+=1
+            elif stat=='SITTING':
+                if landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE].y==landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP].y and landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_KNEE].y==landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP].y:
+                    ac+=1
+            elif stat=='STANDING':
+                if landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE].x==landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP].x and landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_KNEE].x==landmarks.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP].x:
+                    ac+=1    
+            t_ac+=1
+            ac_list.append(ac/t_ac)
+            '''
             cv.putText(frame,stat,(x_min,y_min),cv.FONT_HERSHEY_COMPLEX,0.5,(0,0,0),2) #the posture of the person is siplayed alongside the rectangle drawn around the person
         mp_draw.draw_landmarks(frame,res.pose_landmarks,mp_pose.POSE_CONNECTIONS) #the landmarks are plotted and drawn on teh person in the frame ;
         #res.pose_landmarks returns the coordinates of the landmarks detected; mp_pose.POSE_CONNECTIONS is a predefined list of landmark connections for the medipose Pose model
@@ -71,3 +90,11 @@ while True:
         break
 cap.release()
 cv.destroyAllWindows()
+
+'''
+plt.plot(ac_list)
+plt.title('ACCURACY GRAPH')
+plt.xlabel('FRAME')
+plt.ylabel('ACCURACY')
+plt.show()
+'''
