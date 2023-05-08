@@ -79,7 +79,6 @@ while True:
                     ac+=1
             else:
                 pass
-            print(ac) 
             t_ac+=1
             ac_list.append(ac/t_ac)
         mp_draw.draw_landmarks(frame,res.pose_landmarks,mp_pose.POSE_CONNECTIONS) #the landmarks are plotted and drawn on teh person in the frame ;
