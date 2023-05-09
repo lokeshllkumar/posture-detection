@@ -6,6 +6,7 @@ pip install mediapipe
 
 import cv2 as cv
 import mediapipe as mp #Google's open source framework for cv apps
+import matplotlib.pyplot as mp
 
 #define mediapipe pose estimator object
 mp_draw=mp.solutions.drawing_utils #module used to draw the skeleton on the object detected in the frame;
