@@ -1,9 +1,3 @@
-'''
-pip install opencv-python
-pip install matplotlib
-pip install mediapipe
-'''
-
 import cv2 as cv
 import mediapipe as mp #Google's open source framework for cv apps
 import matplotlib.pyplot as mp
