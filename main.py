@@ -50,7 +50,7 @@ while True:
                 if y > y_max:
                     y_max = y
             cv.rectangle(frame, (x_min,y_min), (x_max,y_max), (255,0,0), 2) #rectangle is drawn around the object which was detected before using the coordinates calculated above
-            w, h = x_max-x_min, y_max-y_min #width and height of the rectangle is calculated suing coordinates calculated above
+            w, h = x_max - x_min, y_max - y_min #width and height of the rectangle is calculated suing coordinates calculated above
             a_ratio = w / h #aspect ratio of the object is calculated
             if a_ratio <= 0.4: #if aspect ratio is less than or equal to 0.4, the person is standing
                 stat = 'STANDING'
