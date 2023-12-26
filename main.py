@@ -31,7 +31,7 @@ while True:
         res = pose.process(cv.cvtColor(frame, cv.COLOR_BGR2RGB)) #function that takes an RGB frame and detect and estimate human pose within that frame;
         #returns a dictionary containing detected landmarks and the corresponding confidence scores;
         #converts BGR to RGB since mediapipe expects input in RGB format
-        landmarks=res.pose_landmarks #returns a list of the detected landmarks detected in the given Pose object (3D points);
+        landmarks = res.pose_landmarks #returns a list of the detected landmarks detected in the given Pose object (3D points);
         #there are 33 landmarks numbered from 0 to 32 corresponding to different parts of the person's body
         if landmarks is not None:
             x_min = frame.shape[1] #stores the width of the frame
@@ -39,7 +39,7 @@ while True:
             x_max = 0
             y_max = 0
             for landmark in landmarks.landmark: #iterating through all the landmark objects stored in landmarks object; 0 for nose, 1 for left eye and so on... 
-                x, y=int(landmark.x*frame.shape[1]), int(landmark.y*frame.shape[0]) #calculate the pixel coordinates of a landmark point;
+                x, y = int(landmark.x*frame.shape[1]), int(landmark.y*frame.shape[0]) #calculate the pixel coordinates of a landmark point;
                 #landmark.x and landmark.y represent normalized coordinates of the landmark with respect to the eidth and height of the frame (range between (0,0) a nd (1,1)) 
                 if x < x_min:
                     x_min = x
@@ -50,7 +50,7 @@ while True:
                 if y > y_max:
                     y_max = y
             cv.rectangle(frame, (x_min,y_min), (x_max,y_max), (255,0,0), 2) #rectangle is drawn around the object which was detected before using the coordinates calculated above
-            w, h=x_max-x_min, y_max-y_min #width and height of the rectangle is calculated suing coordinates calculated above
+            w, h = x_max-x_min, y_max-y_min #width and height of the rectangle is calculated suing coordinates calculated above
             a_ratio = w / h #aspect ratio of the object is calculated
             if a_ratio <= 0.4: #if aspect ratio is less than or equal to 0.4, the person is standing
                 stat = 'STANDING'
