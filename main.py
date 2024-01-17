@@ -9,7 +9,7 @@ mp_draw = mp.solutions.drawing_utils #module used to draw the skeleton on the ob
 mp_pose = mp.solutions.pose #module that includes pre-trained depp learning model to estimate human poses from images/videos
 #provides utilities for extracting features from poses such as position, orientation and velocity of different body parts
 
-pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) #function that creates an instance of a pose estimation model
+pose = mp_pose.Pose(min_detection_confidence = 0.5, min_tracking_confidence = 0.5) #function that creates an instance of a pose estimation model
 #uses ML techniques to to identify and track a person's shoulders, wrists, elbows, etc.;
 #min_detection_confidence sets threshold value for confidence in detection( high value implying that only more confident detections are accepted);
 #min_tracking_confidence sets threshold value for confidence in tracking (high value implying that only more confident landmarks are considered);
@@ -39,7 +39,7 @@ while True:
             x_max = 0
             y_max = 0
             for landmark in landmarks.landmark: #iterating through all the landmark objects stored in landmarks object; 0 for nose, 1 for left eye and so on... 
-                x, y = int(landmark.x*frame.shape[1]), int(landmark.y*frame.shape[0]) #calculate the pixel coordinates of a landmark point;
+                x, y = int(landmark.x * frame.shape[1]), int(landmark.y * frame.shape[0]) #calculate the pixel coordinates of a landmark point;
                 #landmark.x and landmark.y represent normalized coordinates of the landmark with respect to the eidth and height of the frame (range between (0,0) a nd (1,1)) 
                 if x < x_min:
                     x_min = x
@@ -49,7 +49,7 @@ while True:
                     y_min = y
                 if y > y_max:
                     y_max = y
-            cv.rectangle(frame, (x_min,y_min), (x_max,y_max), (255,0,0), 2) #rectangle is drawn around the object which was detected before using the coordinates calculated above
+            cv.rectangle(frame, (x_min,y_min), (x_max,y_max), (255, 0, 0), 2) #rectangle is drawn around the object which was detected before using the coordinates calculated above
             w, h = x_max - x_min, y_max - y_min #width and height of the rectangle is calculated suing coordinates calculated above
             a_ratio = w / h #aspect ratio of the object is calculated
             if a_ratio <= 0.4: #if aspect ratio is less than or equal to 0.4, the person is standing
@@ -63,15 +63,15 @@ while True:
             #accuracy is calculated by comparing the coordinates of the landmarks of the hips, knees, and shoulders of reafch case i.e. standing up, sitting down and lying down
             try:
                 if stat == 'LYING DOWN':
-                    if int(landmarks.landmark[11].y*frame.shape[0]) > int(landmarks.landmark[12].y*frame.shape[0]) and int(landmarks.landmark[23].y*frame.shape[0]) > int(landmarks.landmark[24].y*frame.shape[0]):
+                    if int(landmarks.landmark[11].y * frame.shape[0]) > int(landmarks.landmark[12].y * frame.shape[0]) and int(landmarks.landmark[23].y * frame.shape[0]) > int(landmarks.landmark[24].y * frame.shape[0]):
                         ac += 1
-                    elif int(landmarks.landmark[11].y*frame.shape[0]) < int(landmarks.landmark[12].y*frame.shape[0]) and int(landmarks.landmark[23].y*frame.shape[0]) < int(landmarks.landmark[24].y*frame.shape[0]):
+                    elif int(landmarks.landmark[11].y * frame.shape[0]) < int(landmarks.landmark[12].y * frame.shape[0]) and int(landmarks.landmark[23].y * frame.shape[0]) < int(landmarks.landmark[24].y * frame.shape[0]):
                         ac += 1
                 elif stat == 'SITTING':
-                    if int(landmarks.landmark[23].y*frame.shape[0])-6<=int(landmarks.landmark[25].y*frame.shape[0])<=int(landmarks.landmark[23].y*frame.shape[0])+6 and int(landmarks.landmark[24].y*frame.shape[0])-6 <= int(landmarks.landmark[26].y*frame.shape[0]) <= int(landmarks.landmark[24].y*frame.shape[0])+6:
+                    if int(landmarks.landmark[23].y * frame.shape[0])-6 <= int(landmarks.landmark[25].y * frame.shape[0]) <= int(landmarks.landmark[23].y * frame.shape[0])+6 and int(landmarks.landmark[24].y * frame.shape[0])-6 <= int(landmarks.landmark[26].y * frame.shape[0]) <= int(landmarks.landmark[24].y * frame.shape[0])+6:
                         ac += 1
                 elif stat == 'STANDING':
-                    if int(landmarks.landmark[23].x*frame.shape[1])-6 <= int(landmarks.landmark[25].x*frame.shape[1]) <= int(landmarks.landmark[23].x*frame.shape[1])+6 and int(landmarks.landmark[24].x*frame.shape[1])-6 <= int(landmarks.landmark[26].x*frame.shape[1]) <= int(landmarks.landmark[24].x*frame.shape[1])+6:
+                    if int(landmarks.landmark[23].x * frame.shape[1])-6 <= int(landmarks.landmark[25].x * frame.shape[1]) <= int(landmarks.landmark[23].x * frame.shape[1])+6 and int(landmarks.landmark[24].x * frame.shape[1])-6 <= int(landmarks.landmark[26].x * frame.shape[1]) <= int(landmarks.landmark[24].x * frame.shape[1])+6:
                         ac += 1
                 else:
                     pass
