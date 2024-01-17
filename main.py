@@ -68,10 +68,10 @@ while True:
                     elif int(landmarks.landmark[11].y * frame.shape[0]) < int(landmarks.landmark[12].y * frame.shape[0]) and int(landmarks.landmark[23].y * frame.shape[0]) < int(landmarks.landmark[24].y * frame.shape[0]):
                         ac += 1
                 elif stat == 'SITTING':
-                    if int(landmarks.landmark[23].y * frame.shape[0])-6 <= int(landmarks.landmark[25].y * frame.shape[0]) <= int(landmarks.landmark[23].y * frame.shape[0])+6 and int(landmarks.landmark[24].y * frame.shape[0])-6 <= int(landmarks.landmark[26].y * frame.shape[0]) <= int(landmarks.landmark[24].y * frame.shape[0])+6:
+                    if int(landmarks.landmark[23].y * frame.shape[0]) - 6 <= int(landmarks.landmark[25].y * frame.shape[0]) <= int(landmarks.landmark[23].y * frame.shape[0]) + 6 and int(landmarks.landmark[24].y * frame.shape[0]) - 6 <= int(landmarks.landmark[26].y * frame.shape[0]) <= int(landmarks.landmark[24].y * frame.shape[0]) + 6:
                         ac += 1
                 elif stat == 'STANDING':
-                    if int(landmarks.landmark[23].x * frame.shape[1])-6 <= int(landmarks.landmark[25].x * frame.shape[1]) <= int(landmarks.landmark[23].x * frame.shape[1])+6 and int(landmarks.landmark[24].x * frame.shape[1])-6 <= int(landmarks.landmark[26].x * frame.shape[1]) <= int(landmarks.landmark[24].x * frame.shape[1])+6:
+                    if int(landmarks.landmark[23].x * frame.shape[1]) - 6 <= int(landmarks.landmark[25].x * frame.shape[1]) <= int(landmarks.landmark[23].x * frame.shape[1]) + 6 and int(landmarks.landmark[24].x * frame.shape[1]) - 6 <= int(landmarks.landmark[26].x * frame.shape[1]) <= int(landmarks.landmark[24].x * frame.shape[1]) + 6:
                         ac += 1
                 else:
                     pass
