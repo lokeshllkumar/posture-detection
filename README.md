@@ -17,6 +17,6 @@ Install the following on your system
 
 In a your local terminal environment, run 
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 to install the required dependencies.
