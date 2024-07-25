@@ -1,5 +1,3 @@
-#to draw contours over objects in frame
-
 import cv2
 
 cap = cv2.VideoCapture(0)
