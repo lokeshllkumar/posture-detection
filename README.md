@@ -14,3 +14,9 @@ Install the following on your system
 3. opencv2 - the OpenCV library for Python
 4. matplotlib - the plotting library to plot an accuracy graph
 5. mediapipe - the library based on the framework to perform skeletonization on objects in frame
+
+In a your local terminal environment, run 
+```bash
+pip install -r requirement.txt
+```
+to install the required dependencies.
