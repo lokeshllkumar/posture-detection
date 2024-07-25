@@ -1,4 +1,4 @@
-# fall-detector
+# posture-detection
 A fall detection program written using OpenCV in Python.
 
 ## Description
